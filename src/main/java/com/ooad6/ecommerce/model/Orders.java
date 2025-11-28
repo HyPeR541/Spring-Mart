@@ -12,9 +12,10 @@ public class Orders {
     private List<Cart> prodList;
     private String paymentMethod;
     private LocalDateTime timestamp;
-
+    private String status;
     public Orders() {
         this.timestamp = LocalDateTime.now(); // Auto-set order time
+        this.status = "Pending"; // Default status
     }
 
     public int getOrderId() { return orderId; }
@@ -32,6 +33,8 @@ public class Orders {
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }  
     @Override
     public String toString() {
         return "Orders{" +

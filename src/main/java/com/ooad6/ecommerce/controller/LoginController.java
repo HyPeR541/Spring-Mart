@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -15,6 +16,9 @@ import java.util.Optional;
 public class LoginController {
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping("/login")
     public String login() {
@@ -30,16 +34,26 @@ public class LoginController {
     ) {
         Optional<User> user = userRepository.findByuserId(userid);
 
-        if (user.isPresent() && user.get().getPassword().equals(password))
+        if (user.isPresent())
         {
-            session.setAttribute("userid", userid);
-            if (user.get().getName().toLowerCase().contains("admin"))
+            boolean match= passwordEncoder.matches(password, user.get().getPassword());
+            if(match)
             {
-                return "redirect:/adminDashboard";
+
+                session.setAttribute("userid", userid);
+                if (user.get().getName().toLowerCase().contains("admin"))
+                {
+                    return "redirect:/adminDashboard";
+                }
+                else
+                {
+                    return "redirect:/homepage";
+                }
             }
             else
             {
-                return "redirect:/homepage";
+                redirectAttributes.addAttribute("error", "Incorrect password or UserId. Try again!");
+                return "redirect:/login";
             }
         }
         else {

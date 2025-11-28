@@ -9,6 +9,13 @@
 <body>
 <h1>Your Cart</h1>
 
+<c:if test="${not empty sessionScope.orderMessage}">
+    <div style="background-color: #ffcccc; padding: 10px; margin: 10px 0; border: 1px solid red;">
+        <strong>Error:</strong> ${sessionScope.orderMessage}
+    </div>
+    <% session.removeAttribute("orderMessage"); %>
+</c:if>
+
 <c:if test="${empty cartItems}">
     <p>Your cart is empty. <a href="/">Shop Now</a></p>
 </c:if>
